@@ -1,7 +1,8 @@
 # Garry's Mod AI Cheat
 A simple and lightweight cheat for Garry's Mod made with ChatGPT with features like ESP, Aimbot. Built to enhance gameplay while keeping it undetectable (not really).
 
- **I AM NOT RESPONSIBLE FOR ANY DAMAGE, BANS OR ANYTHING RELATED TO THIS CHEAT. You're downloading and using this at your own risk**
+ **I AM NOT RESPONSIBLE FOR ANY DAMAGE, BANS OR ANYTHING RELATED TO THIS CHEAT. You're downloading and using this at your own risk** 
+ I also don't crown myself to be an elite coder, this was just a little fun project to see what i could do with ChatGPT. I'm always open for new cheat suggestions!
 
 ---
 **Features**
