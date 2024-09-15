@@ -3,7 +3,7 @@ A simple and lightweight cheat for Garry's Mod with features like ESP, Aimbot. B
 
  **I AM NOT RESPONSIBLE FOR ANY DAMAGE, BANS OR ANYTHING RELATED TO THIS CHEAT. You're downloading and using this at your own risk**
 
-
+---
 **Features**
 - ESP: Display players, items, and objectives through walls.
 <details>
@@ -14,14 +14,16 @@ A simple and lightweight cheat for Garry's Mod with features like ESP, Aimbot. B
 - Different bones to aim for
 
 - Aimbot FOV Slider / Aim smoothness
-  
+---
 </details>
-- Rainbow menu (super fun, who doesn't want that)
 
+
+- Rainbow menu (super fun, who doesn't want that)
+---
 
 **To be added:**
 
-Triggerbot: Fires automatically when your crosshair is over an enemy.
+- Triggerbot: Fires automatically when your crosshair is over an enemy.
 
 
 
