@@ -1,7 +1,7 @@
 # Garry's Mod Cheat Project
 A simple and lightweight cheat for Garry's Mod with features like ESP, Aimbot. Built to enhance gameplay while keeping it undetectable (not really).
 
-## **I AM NOT RESPONSIBLE FOR ANY DAMAGE, BANS OR ANYTHING RELATED TO THIS CHEAT. You're downloading and using this at your own risk**
+ **I AM NOT RESPONSIBLE FOR ANY DAMAGE, BANS OR ANYTHING RELATED TO THIS CHEAT. You're downloading and using this at your own risk**
 
 
 **Features**
