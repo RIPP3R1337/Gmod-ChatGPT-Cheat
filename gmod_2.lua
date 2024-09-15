@@ -84,7 +84,7 @@ if CLIENT then -- Ensure the script only runs client-side
 
         ESPMenu = vgui.Create("DFrame")
         ESPMenu:SetSize(450, 600)
-        ESPMenu:SetTitle("GMod Helper Menu")
+        ESPMenu:SetTitle("RIPP3R's Gmod Cheat Menu")
         ESPMenu:Center()
         ESPMenu:MakePopup()
 
@@ -329,6 +329,11 @@ if CLIENT then -- Ensure the script only runs client-side
         distanceUnitLabel:SetPos(10, 50)
         distanceUnitLabel:SetText("Distance Unit:")
         distanceUnitLabel:SizeToContents()
+
+        local distanceUnitExplain = vgui.Create("Dlabel", otherPanel)
+        distanceUnitExplain:SetPos(10, 70)
+        distanceUnitExplain:SetPos("Revert to units if you would like to know players distance for aimbot")
+        distanceUnitExplain:SizeToContents()
 
         local distanceUnitCombo = vgui.Create("DComboBox", otherPanel)
         distanceUnitCombo:SetPos(120, 50)
