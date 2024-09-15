@@ -1,3 +1,5 @@
+
+-- Original Code:
 if CLIENT then -- Ensure the script only runs client-side
 
     -- ESP, Aimbot, and Misc Settings
@@ -15,24 +17,35 @@ if CLIENT then -- Ensure the script only runs client-side
 
         -- Other Settings
         distanceLimit = 3000, -- Default distance set to 3000 units
-        distanceUnit = "meters", -- Default distance unit in meters
+        distanceUnit = "Units", -- Default distance unit in meters
 
         -- Aimbot and FOV Settings
         aimbotEnabled = false, -- Toggle aimbot
         aimSmoothness = 0.1, -- Smoothing factor for aimbot aim movement
         aimFOV = 200, -- Field of view radius for the aimbot and FOV circle
         aimBone = "ValveBiped.Bip01_Head1", -- Bone to aim at (head by default)
-        maxDistance = 5000, -- Maximum distance for the aimbot to work
+        maxDistance = 2500, -- Default Maximum distance for the aimbot to work
         showFOVCircle = false, -- FOV Circle Toggle
         checkVisibility = true,
 
         -- Misc Settings
-        adjustFOV = 90
+        adjustFOV = 100
     }
 
     -- Menu state
     local espMenuOpen = false
     local lastToggleTime = 0 -- Variable to track the last time F2 was pressed
+
+
+    -- Rainbow function
+    local function RainbowColor()
+        local hue = (CurTime() * 100) % 360 -- Calculate hue based on time
+        local color = HSVToColor(hue, 1, 1) -- Convert hue to RGB
+
+        color.a = 255
+        return color
+    end
+
 
     -- Helper function to get health-based color (green to red)
     local function GetHealthColor(health)
@@ -84,7 +97,7 @@ if CLIENT then -- Ensure the script only runs client-side
 
         ESPMenu = vgui.Create("DFrame")
         ESPMenu:SetSize(450, 600)
-        ESPMenu:SetTitle("RIPP3R's Gmod Cheat Menu")
+        ESPMenu:SetTitle("RIPP3R's GMod Cheat Menu")
         ESPMenu:Center()
         ESPMenu:MakePopup()
 
@@ -100,7 +113,7 @@ if CLIENT then -- Ensure the script only runs client-side
         -- Checkbox for enabling ESP
         local enabledCheckBox = vgui.Create("DCheckBoxLabel", espPanel)
         enabledCheckBox:SetPos(10, 10)
-        enabledCheckBox:SetText("Enabled")
+        enabledCheckBox:SetText("Enable Menu")
         enabledCheckBox:SetValue(espSettings.enabled)
         enabledCheckBox:SizeToContents()
         enabledCheckBox.OnChange = function(_, val)
@@ -297,6 +310,8 @@ if CLIENT then -- Ensure the script only runs client-side
         boneCombo:AddChoice("Head")
         boneCombo:AddChoice("Spine")
         boneCombo:AddChoice("Pelvis")
+        boneCombo:SetToolTip("Select the bone to aim at. Options include Head, Spine, and Pelvis.")
+
         boneCombo.OnSelect = function(_, _, value)
             if value == "Head" then
                 espSettings.aimBone = "ValveBiped.Bip01_Head1"
@@ -330,18 +345,14 @@ if CLIENT then -- Ensure the script only runs client-side
         distanceUnitLabel:SetText("Distance Unit:")
         distanceUnitLabel:SizeToContents()
 
-        local distanceUnitExplain = vgui.Create("Dlabel", otherPanel)
-        distanceUnitExplain:SetPos(10, 70)
-        distanceUnitExplain:SetPos("Revert to units if you would like to know players distance for aimbot")
-        distanceUnitExplain:SizeToContents()
-
         local distanceUnitCombo = vgui.Create("DComboBox", otherPanel)
         distanceUnitCombo:SetPos(120, 50)
         distanceUnitCombo:SetSize(100, 20)
         distanceUnitCombo:SetValue(espSettings.distanceUnit)
-        distanceUnitCombo:AddChoice("meters")
-        distanceUnitCombo:AddChoice("feet")
-        distanceUnitCombo:AddChoice("units")
+        distanceUnitCombo:AddChoice("Meters")
+        distanceUnitCombo:AddChoice("Feet")
+        distanceUnitCombo:AddChoice("Units")
+        distanceUnitCombo:SetToolTip("For our EU/US people. Keep Units on if you'd like to know ingame distance for Aimbot/ESP")
         distanceUnitCombo.OnSelect = function(_, _, value)
             espSettings.distanceUnit = value
         end
@@ -372,25 +383,25 @@ if CLIENT then -- Ensure the script only runs client-side
         fovSlider:SetMin(10)
         fovSlider:SetMax(150)
         fovSlider:SetText("Adjust FOV")
-        fovSlider:SetValue(espSettings.adjustFOV or 90) -- Default to 90 FOV
+        fovSlider:SetValue(espSettings.adjustFOV or 100) -- Default to 90 FOV
         fovSlider.OnValueChanged = function(_, val)
             espSettings.adjustFOV = val
             LocalPlayer():SetFOV(val, 0) -- Apply the FOV in real-time
         end
 
-        -- FOV Reset Button to reset to default Garry's Mod FOV (90)
+        -- FOV Reset Button to reset to default Garry's Mod FOV (100)
         local fovResetButton = vgui.Create("DButton", miscPanel)
         fovResetButton:SetPos(10, 70)
         fovResetButton:SetSize(100, 30)
         fovResetButton:SetText("Reset FOV")
         fovResetButton.DoClick = function()
-            espSettings.adjustFOV = 90 -- Reset the value in the settings to 90
-            fovSlider:SetValue(90) -- Reset the slider to 90
-            LocalPlayer():SetFOV(90, 0) -- Reset the FOV back to the default (90)
+            espSettings.adjustFOV = 100 -- Reset the value in the settings to 90
+            fovSlider:SetValue(100) -- Reset the slider to 90
+            LocalPlayer():SetFOV(100, 0) -- Reset the FOV back to the default (90)
         end
 
 
-                -- Add rainbow menu toggle to the Misc section
+        -- Add rainbow menu toggle to the Misc section
         local rainbowMenuCheckBox = vgui.Create("DCheckBoxLabel", miscPanel)
         rainbowMenuCheckBox:SetPos(10, 10)  -- Adjusted position, ensuring it's below other elements
         rainbowMenuCheckBox:SetText("Enable Rainbow Menu")
@@ -398,6 +409,17 @@ if CLIENT then -- Ensure the script only runs client-side
         rainbowMenuCheckBox:SizeToContents()
         rainbowMenuCheckBox.OnChange = function(_, val)
             espSettings.rainbowMenu = val
+        end
+
+        -- Add rainbow menu toggle to the Misc section
+        local bunnyHopMenuCheckBox = vgui.Create("DCheckBoxLabel", miscPanel)
+        bunnyHopMenuCheckBox:SetPos(10, 30)  -- Adjusted position, ensuring it's below other elements
+        bunnyHopMenuCheckBox:SetText("Enable Bunnyhop")
+        bunnyHopMenuCheckBox:SetValue(espSettings.bunnyHopMenu or false)
+        bunnyHopMenuCheckBox:SizeToContents()
+        bunnyHopMenuCheckBox:SetToolTip("You go wee woo")
+        bunnyHopMenuCheckBox.OnChange = function(_, val)
+            espSettings.bunnyHopMenu = val
         end
 
 
@@ -483,8 +505,6 @@ if CLIENT then -- Ensure the script only runs client-side
         return screenPosTop, screenPosBottom, boxWidth, boxHeight, distance
 
     end
-
-
 
     -- Function to apply chams (through walls visibility)
 
@@ -632,6 +652,77 @@ if CLIENT then -- Ensure the script only runs client-side
         halo.Add(players, espSettings.glowColor or Color(255, 0, 0), 1, 1, 2, true, true)
     end)
 
+-- Hook for Bunnyhop logic
+hook.Add("CreateMove", "BunnyhopHook", function(cmd)
+    local player = LocalPlayer()
+    if not player:IsValid() or not player:Alive() then return end -- Ensure player is valid and alive
+
+    -- Only execute if bunnyhop is enabled
+    if espSettings.bunnyHopMenu then
+        -- Check if the player is on the ground and pressing the jump key
+        if input.IsKeyDown(KEY_SPACE) then
+            -- If player is on the ground, allow jumping
+            if player:OnGround() then
+                cmd:SetButtons(bit.bor(cmd:GetButtons(), IN_JUMP))
+            else
+                -- Clear jump input to avoid "holding jump" while in air
+                cmd:RemoveKey(IN_JUMP)
+            end
+        end
+    end
+end)
+
+
+    -- Hook to draw enabled settings on the screen
+    hook.Add("HUDPaint", "DrawEnabledFeatures", function()
+        local x, y = 10, 50 -- Top left corner position
+        local enabledFeatures = {}
+
+        -- Check which features are enabled and add them to the list
+        if espSettings.bunnyHopMenu then
+            table.insert(enabledFeatures, "- Bunnyhop Enabled")
+        end
+        if espSettings.enabled then
+            table.insert(enabledFeatures, "- ESP Menu Enabled")
+        end
+        if espSettings.showFOVCircle then
+            table.insert(enabledFeatures, "- FOV Circle Enabled")
+        end
+        if espSettings.aimbotEnabled then
+            table.insert(enabledFeatures, "- Aimbot Enabled")
+        end
+        if espSettings.showHealth then
+            table.insert(enabledFeatures, "- HealthCheck Enabled")
+        end
+        if espSettings.showName then
+            table.insert(enabledFeatures, "- NameCheck Enabled")
+        end
+        if espSettings.showSnaplines then
+            table.insert(enabledFeatures, "- Snaplines Enabled")
+        end
+        if espSettings.showWeapon then
+            table.insert(enabledFeatures, "- WeaponCheck Enabled")
+        end
+        if espSettings.showRole then
+            table.insert(enabledFeatures, "- RoleCheck Enabled")
+        end
+        if espSettings.show2DBox then
+            table.insert(enabledFeatures, "- 2D Box Enabled")
+        end
+        if espSettings.showChams then
+            table.insert(enabledFeatures, "- Chams Enabled")
+        end
+
+        -- Add more checks for other features you have
+
+        -- Draw each enabled feature with the rainbow color
+        for i, feature in ipairs(enabledFeatures) do
+            local rainbowColor = RainbowColor() -- Use the rainbow function
+
+            -- Draw the text with the rainbow color
+            draw.SimpleText(feature, "Trebuchet24", x, y + (i - 1) * 20, rainbowColor, TEXT_ALIGN_LEFT)
+        end
+    end)
 
 
 
@@ -695,3 +786,5 @@ if CLIENT then -- Ensure the script only runs client-side
         DrawFOVCircle()
     end)
 end
+
+
