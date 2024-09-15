@@ -8,9 +8,9 @@ A simple and lightweight cheat for Garry's Mod with features like ESP, Aimbot. B
 - ESP: Display players, items, and objectives through walls.
 <details>
 <summary>Aimbot: Automatic aiming assistance.</summary>
-  - Checks if player is behind a wall.
-  - Different bones to aim for
-  - Aimbot FOV Slider / Aim smoothness
+- Checks if player is behind a wall.
+- Different bones to aim for
+- Aimbot FOV Slider / Aim smoothness
 </details>
 - Rainbow menu (super fun, who doesn't want that)
 
