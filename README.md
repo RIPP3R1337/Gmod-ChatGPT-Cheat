@@ -25,7 +25,6 @@ A simple and lightweight cheat for Garry's Mod made with ChatGPT with features l
 
 
 
-
 <summary>Aimbot: Automatic aiming assistance.</summary>
   
 - Checks if player is behind a wall.
@@ -42,6 +41,12 @@ A simple and lightweight cheat for Garry's Mod made with ChatGPT with features l
 - "Enabled" status for different toggles.
 - Bunny hopping (Might re-tweak it to be better)
 ---
+
+
+![Gif Showcase](https://github.com/RIPP3R1337/Gmod-ChatGPT-Cheat/blob/main/showcase.gif)
+
+---
+
 
 **To be added:**
 
