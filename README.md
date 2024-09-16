@@ -5,9 +5,27 @@ A simple and lightweight cheat for Garry's Mod made with ChatGPT with features l
  I also don't crown myself to be an elite coder, this was just a little fun project to see what i could do with ChatGPT. I'm always open for new cheat suggestions!
 
 ---
+
+**Open menu with INSERT**
+
 **Features**
-- ESP: Display players, items, and objectives through walls.
-<details>
+
+<summary>ESP: Display players, items, and objectives through walls.</summary>
+
+- Name 
+- Health
+- Weapon
+- Snaplines
+- Distance
+- 2D box
+- Chams
+- Roles
+- Player Glow
+
+
+
+
+
 <summary>Aimbot: Automatic aiming assistance.</summary>
   
 - Checks if player is behind a wall.
@@ -15,20 +33,28 @@ A simple and lightweight cheat for Garry's Mod made with ChatGPT with features l
 - Different bones to aim for
 
 - Aimbot FOV Slider / Aim smoothness
----
-</details>
 
+
+
+<summary>Misc</summary>
 
 - Rainbow menu (super fun, who doesn't want that)
+- "Enabled" status for different toggles.
+- Bunny hopping (Might re-tweak it to be better)
 ---
 
 **To be added:**
 
 - Triggerbot: Fires automatically when your crosshair is over an enemy.
+- Backtracking
 
+<summary>Known issue:</summary>
 
+- Option in ESP "Enable Menu" which enables ESP/Aimbot except the misc functions. Should only be Enabling ESP
 
-How to use:
+---
+
+# How to use:
 
 1. Place in `SteamLibrary\steamapps\common\GarrysMod\garrysmod\lua`
 2. Lenny's script provided us with a beautiful website: [Garry's mod server list with sv_allowslua allowed](https://www.gametracker.com/search/garrysmod/?search_by=server_variable&search_by2=sv_allowcslua&query=&loc=_all&sort=&order=) << BE AWARE, some servers might give false-positives. So expect lua to not work on certain servers.
