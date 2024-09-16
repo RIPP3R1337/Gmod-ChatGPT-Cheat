@@ -63,7 +63,7 @@ A simple and lightweight cheat for Garry's Mod made with ChatGPT with features l
 
 1. Place in `SteamLibrary\steamapps\common\GarrysMod\garrysmod\lua`
 2. Lenny's script provided us with a beautiful website: [Garry's mod server list with sv_allowslua allowed](https://www.gametracker.com/search/garrysmod/?search_by=server_variable&search_by2=sv_allowcslua&query=&loc=_all&sort=&order=) << BE AWARE, some servers might give false-positives. So expect lua to not work on certain servers.
-
+3. Put in **Server variable** "1" It wont be a lot of servers but there's still a few with lua enabled.
 
 
 
