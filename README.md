@@ -21,6 +21,7 @@ A simple and lightweight cheat for Garry's Mod made with ChatGPT with features l
 - Chams
 - Roles
 - Player Glow
+- Skeleton (Still a bit broken, draws all distances instead of distance mentioned by user)
 
 
 
