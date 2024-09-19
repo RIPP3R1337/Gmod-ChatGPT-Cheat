@@ -14,6 +14,7 @@ if CLIENT then -- Ensure the script only runs client-side
         show2DBox = false, -- Option to toggle 2D Box separately
         showChams = false, -- Chams (see-through walls)
         showRole = false, -- Show player role (if available)
+        skeletonEnabled = false,
 
         -- Other Settings
         distanceLimit = 3000, -- Default distance set to 3000 units
@@ -29,7 +30,10 @@ if CLIENT then -- Ensure the script only runs client-side
         checkVisibility = true,
 
         -- Misc Settings
-        adjustFOV = 100
+        adjustFOV = 100,
+
+
+
     }
 
     -- Menu state
@@ -37,6 +41,52 @@ if CLIENT then -- Ensure the script only runs client-side
     local lastToggleTime = 0 -- Variable to track the last time F2 was pressed
 
 
+        -- Key bones to draw a basic skeleton
+    local skeletonBones = {
+        { "ValveBiped.Bip01_Head1", "ValveBiped.Bip01_Neck1" },
+        { "ValveBiped.Bip01_Neck1", "ValveBiped.Bip01_Spine" },
+        { "ValveBiped.Bip01_Spine", "ValveBiped.Bip01_Spine1" },
+        { "ValveBiped.Bip01_Spine1", "ValveBiped.Bip01_Spine2" },
+        { "ValveBiped.Bip01_Spine2", "ValveBiped.Bip01_Pelvis" },
+        { "ValveBiped.Bip01_Pelvis", "ValveBiped.Bip01_L_Thigh" },
+        { "ValveBiped.Bip01_Pelvis", "ValveBiped.Bip01_R_Thigh" },
+        { "ValveBiped.Bip01_L_Thigh", "ValveBiped.Bip01_L_Calf" },
+        { "ValveBiped.Bip01_R_Thigh", "ValveBiped.Bip01_R_Calf" },
+        { "ValveBiped.Bip01_L_Calf", "ValveBiped.Bip01_L_Foot" },
+        { "ValveBiped.Bip01_R_Calf", "ValveBiped.Bip01_R_Foot" },
+        { "ValveBiped.Bip01_Spine2", "ValveBiped.Bip01_L_UpperArm" },
+        { "ValveBiped.Bip01_Spine2", "ValveBiped.Bip01_R_UpperArm" },
+        { "ValveBiped.Bip01_L_UpperArm", "ValveBiped.Bip01_L_Forearm" },
+        { "ValveBiped.Bip01_R_UpperArm", "ValveBiped.Bip01_R_Forearm" },
+        { "ValveBiped.Bip01_L_Forearm", "ValveBiped.Bip01_L_Hand" },
+        { "ValveBiped.Bip01_R_Forearm", "ValveBiped.Bip01_R_Hand" }
+    }
+    
+
+        -- Function to draw a skeleton on a player
+    local function DrawSkeleton(player)
+        if not player:Alive() then return end
+
+        for _, bonePair in ipairs(skeletonBones) do
+            local bone1Index = player:LookupBone(bonePair[1])
+            local bone2Index = player:LookupBone(bonePair[2])
+
+            if bone1Index and bone2Index then
+                local bone1Pos, _ = player:GetBonePosition(bone1Index)
+                local bone2Pos, _ = player:GetBonePosition(bone2Index)
+
+                -- Convert bone positions to screen coordinates
+                local bone1ScreenPos = bone1Pos:ToScreen()
+                local bone2ScreenPos = bone2Pos:ToScreen()
+
+                -- Draw the line between the two bones
+                surface.SetDrawColor(255, 0, 0, 255) -- Red color for the skeleton lines
+                surface.DrawLine(bone1ScreenPos.x, bone1ScreenPos.y, bone2ScreenPos.x, bone2ScreenPos.y)
+            end
+        end
+    end
+    
+    
     -- Rainbow function
     local function RainbowColor()
         local hue = (CurTime() * 100) % 360 -- Calculate hue based on time
@@ -46,6 +96,7 @@ if CLIENT then -- Ensure the script only runs client-side
         return color
     end
 
+    
 
     -- Helper function to get health-based color (green to red)
     local function GetHealthColor(health)
@@ -200,6 +251,17 @@ if CLIENT then -- Ensure the script only runs client-side
             espSettings.showRole = val
         end
 
+        local skeletonCheckBox = vgui.Create("DCheckBoxLabel", espPanel)
+        skeletonCheckBox:SetPos(10, 190)
+        skeletonCheckBox:SetText("Show Skeleton")
+        skeletonCheckBox:SizeToContents()
+        skeletonCheckBox:SetValue(espSettings.skeletonEnabled)
+        skeletonCheckBox:SetToolTip("Draw skeleton on players.")
+
+
+        skeletonCheckBox.OnChange = function(_, val)
+            espSettings.skeletonEnabled = val
+        end
 
         -- In the ESP panel
 
@@ -306,19 +368,22 @@ if CLIENT then -- Ensure the script only runs client-side
         local boneCombo = vgui.Create("DComboBox", aimbotPanel)
         boneCombo:SetPos(100, 130)
         boneCombo:SetSize(150, 20)
-        boneCombo:SetValue("Head")
+        boneCombo:SetValue("Neck")
         boneCombo:AddChoice("Head")
         boneCombo:AddChoice("Spine")
         boneCombo:AddChoice("Pelvis")
+        boneCombo:AddChoice("Neck")
         boneCombo:SetToolTip("Select the bone to aim at. Options include Head, Spine, and Pelvis.")
 
         boneCombo.OnSelect = function(_, _, value)
             if value == "Head" then
                 espSettings.aimBone = "ValveBiped.Bip01_Head1"
             elseif value == "Spine" then
-                espSettings.aimBone = "ValveBiped.Bip01_Spine"
+                espSettings.aimBone = "ValveBiped.Bip01_Spine1"
             elseif value == "Pelvis" then
                 espSettings.aimBone = "ValveBiped.Bip01_Pelvis"
+            elseif value == "Neck" then
+                espSettings.AimBone = "ValveBuped.Bip01_Neck"
             end
         end
 
@@ -424,7 +489,19 @@ if CLIENT then -- Ensure the script only runs client-side
 
 
 
+
     end
+
+
+
+
+
+
+
+
+
+
+
     
     -- Custom function to draw a circle
     local function DrawCircle(x, y, radius, seg, color)
@@ -671,6 +748,18 @@ hook.Add("CreateMove", "BunnyhopHook", function(cmd)
         end
     end
 end)
+
+
+    hook.Add("HUDPaint", "DrawSkeletonESP", function()
+
+        if not espSettings.skeletonEnabled then return end
+
+        for _, player in ipairs(player.GetAll()) do
+            if player ~= LocalPlayer() and player:Alive() then
+                DrawSkeleton(player)
+            end
+        end
+    end)
 
 
     -- Hook to draw enabled settings on the screen
