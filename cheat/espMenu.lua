@@ -257,7 +257,7 @@
         distanceLimitSlider:SetMin(1000)
         distanceLimitSlider:SetMax(7500)
         distanceLimitSlider:SetValue(espSettings.distanceLimit)
-        distanceLimitSlider:SetText("Distance Limit")
+        distanceLimitSlider:SetText("Distance Limit for ESP")
         distanceLimitSlider.OnValueChanged = function(_, val)
             espSettings.distanceLimit = val
         end
@@ -301,9 +301,22 @@
         sheet:AddSheet("Misc", miscPanel, "icon16/star.png")
     
 
+        -- FOV Circle Toggle
+        local fovSliderCheckBox = vgui.Create("DCheckBoxLabel", miscPanel)
+        fovSliderCheckBox:SetPos(10, 50)
+        fovSliderCheckBox:SetText("Adjust FOV")
+        fovSliderCheckBox:SetToolTip("Enable it to get a cooler FOV :)")
+        fovSliderCheckBox:SetValue(espSettings.adjustFOVEnabled)
+        fovSliderCheckBox:SizeToContents()
+        fovSliderCheckBox.OnChange = function(_, val)
+            espSettings.adjustFOVEnabled = val
+        end
+
+
+
         -- FOV Slider for adjusting FOV
         local fovSlider = vgui.Create("DNumSlider", miscPanel)
-        fovSlider:SetPos(10, 50)
+        fovSlider:SetPos(10, 70)
         fovSlider:SetSize(300, 20)
         fovSlider:SetMin(10)
         fovSlider:SetMax(150)
@@ -311,12 +324,12 @@
         fovSlider:SetValue(espSettings.adjustFOV or 100) -- Default to 90 FOV
         fovSlider.OnValueChanged = function(_, val)
             espSettings.adjustFOV = val
-            LocalPlayer():SetFOV(val, 0) -- Apply the FOV in real-time
+            
         end
 
         -- FOV Reset Button to reset to default Garry's Mod FOV (100)
         local fovResetButton = vgui.Create("DButton", miscPanel)
-        fovResetButton:SetPos(10, 70)
+        fovResetButton:SetPos(10, 90)
         fovResetButton:SetSize(100, 30)
         fovResetButton:SetText("Reset FOV")
         fovResetButton.DoClick = function()

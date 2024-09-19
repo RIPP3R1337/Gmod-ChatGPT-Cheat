@@ -1,10 +1,10 @@
 -- Change anything if you don't like the default settings. You could also change the statments to be automatically true
 
+    -- ESP, Aimbot, and Misc Settings
 
--- ESP, Aimbot, and Misc Settings
     espSettings = espSettings or {
         -- ESP Settings
-        enabled = true, -- Just keep this value true, unless you want to manually activate the ESP/Aimbot.
+        enabled = false,
         showName = false,
         showHealth = false,
         showWeapon = false,
@@ -29,8 +29,8 @@
         checkVisibility = true,
 
         -- Misc Settings
-        adjustFOV = 100,
-
+        adjustFOVEnabled = false,
+        adjustFOV = 100
 
 
     }
