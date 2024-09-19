@@ -41,6 +41,9 @@ A simple and lightweight cheat for Garry's Mod made with ChatGPT with features l
 - Rainbow menu (super fun, who doesn't want that)
 - "Enabled" status for different toggles.
 - Bunny hopping (Might re-tweak it to be better)
+- Fov Slider
+
+
 ---
 
 

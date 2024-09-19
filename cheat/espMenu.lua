@@ -121,28 +121,6 @@
             espSettings.skeletonEnabled = val
         end
 
-        -- In the ESP panel
-
-        local glowCheckBox = vgui.Create("DCheckBoxLabel", espPanel)
-        glowCheckBox:SetPos(10, 250)
-        glowCheckBox:SetText("Enable Player Glow")
-        glowCheckBox:SetValue(espSettings.showGlow)
-        glowCheckBox:SizeToContents()
-        glowCheckBox.OnChange = function(_, val)
-        espSettings.showGlow = val
-        end
-                
-        local glowColorPicker = vgui.Create("DColorMixer", espPanel)
-        glowColorPicker:SetPos(10, 280)
-        glowColorPicker:SetSize(200, 150)
-        glowColorPicker:SetPalette(true)
-        glowColorPicker:SetAlphaBar(true)
-        glowColorPicker:SetWangs(true)
-        glowColorPicker:SetColor(espSettings.glowColor or Color(255, 0, 0))
-        glowColorPicker.ValueChanged = function(_, color)
-        espSettings.glowColor = color    
-        end
-
 
         -- Aimbot Category
         local aimbotPanel = vgui.Create("DPanel", sheet)

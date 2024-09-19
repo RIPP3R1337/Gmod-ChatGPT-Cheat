@@ -315,18 +315,6 @@ hook.Add("Think", "ESP_OpenMenu", function()
     end
 end)
 
--- Hook for glow effect
-hook.Add("PreDrawHalos", "AddPlayerGlow", function()
-    if not espSettings.showGlow then return end
-    local players = {}
-    for _, ply in pairs(player.GetAll()) do
-        if ply != LocalPlayer() and ply:Alive() then
-            table.insert(players, ply)
-        end
-    end
-    halo.Add(players, espSettings.glowColor or Color(255, 0, 0), 1, 1, 2, true, true)
-end)
-
 -- Hook for Bunnyhop logic
 hook.Add("CreateMove", "BunnyhopHook", function(cmd)
 local player = LocalPlayer()
