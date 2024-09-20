@@ -79,6 +79,8 @@
             espSettings.showDistance = val
         end
 
+
+        
         -- Toggle 2D Box display
         local box2DCheckBox = vgui.Create("DCheckBoxLabel", espPanel)
         box2DCheckBox:SetPos(10, 130)
@@ -290,11 +292,22 @@
             espSettings.adjustFOVEnabled = val
         end
 
+        -- FOV Circle Toggle
+        local resetFOVOnZoomCheckBox = vgui.Create("DCheckBoxLabel", miscPanel)
+        resetFOVOnZoomCheckBox:SetPos(10, 70)
+        resetFOVOnZoomCheckBox:SetText("Disable scoping in with weapon")
+        resetFOVOnZoomCheckBox:SetToolTip("When checked, your weapon should snap back to default zoomin FOV")
+        resetFOVOnZoomCheckBox:SetValue(espSettings.resetFOVOnZoom)
+        resetFOVOnZoomCheckBox:SizeToContents()
+        resetFOVOnZoomCheckBox.OnChange = function(_, val)
+            espSettings.resetFOVOnZoom = val
+        end
+
 
 
         -- FOV Slider for adjusting FOV
         local fovSlider = vgui.Create("DNumSlider", miscPanel)
-        fovSlider:SetPos(10, 70)
+        fovSlider:SetPos(10, 90)
         fovSlider:SetSize(300, 20)
         fovSlider:SetMin(10)
         fovSlider:SetMax(150)
@@ -307,7 +320,7 @@
 
         -- FOV Reset Button to reset to default Garry's Mod FOV (100)
         local fovResetButton = vgui.Create("DButton", miscPanel)
-        fovResetButton:SetPos(10, 90)
+        fovResetButton:SetPos(10, 110)
         fovResetButton:SetSize(100, 30)
         fovResetButton:SetText("Reset FOV")
         fovResetButton.DoClick = function()

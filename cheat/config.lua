@@ -4,7 +4,7 @@
 
     espSettings = espSettings or {
         -- ESP Settings
-        enabled = false,
+        enabled = true, -- keeps this true
         showName = false,
         showHealth = false,
         showWeapon = false,
@@ -30,7 +30,7 @@
 
         -- Misc Settings
         adjustFOVEnabled = false,
-        adjustFOV = 100
-
+        adjustFOV = 100,
+        resetFOVOnZoom = false
 
     }

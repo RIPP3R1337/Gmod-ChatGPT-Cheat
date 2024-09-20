@@ -3,9 +3,9 @@ include("cheat/bonesArray.lua")
 include("cheat/espMenu.lua")
 include("cheat/config.lua")
 
+
 -- Original Code:
 if CLIENT then -- Ensure the script only runs client-side
-
 
 
 -- Menu state
@@ -14,7 +14,7 @@ lastToggleTime = 0 -- Variable to track the last time F2 was pressed
 
 
     -- Function to draw a skeleton on a player
-local function DrawSkeleton(player)
+local function DrawSkeleton(player, color)
     if not player:Alive() then return end
 
     for _, bonePair in ipairs(skeletonBones) do
@@ -29,8 +29,8 @@ local function DrawSkeleton(player)
             local bone1ScreenPos = bone1Pos:ToScreen()
             local bone2ScreenPos = bone2Pos:ToScreen()
 
-            -- Draw the line between the two bones
-            surface.SetDrawColor(255, 0, 0, 255) -- Red color for the skeleton lines
+            -- Draw the line between the two bones with the provided color
+            surface.SetDrawColor(color.r, color.g, color.b, 255)
             surface.DrawLine(bone1ScreenPos.x, bone1ScreenPos.y, bone2ScreenPos.x, bone2ScreenPos.y)
         end
     end
@@ -68,27 +68,6 @@ local function ConvertDistance(distance)
     else
         return math.Round(distance, 2) .. " units" -- Default to units if something goes wrong
     end
-end
-
--- Add back the CalculateBox function
-local function CalculateBox(target)
-    local ply = LocalPlayer()
-    local distance = ply:GetPos():Distance(target:GetPos())
-
-    -- Scale the box based on distance (closer = bigger)
-    local scale = math.Clamp(2000 / distance, 0.5, 1.5)
-    local min, max = target:OBBMins(), target:OBBMaxs()
-    local headPos = target:GetPos() + Vector(0, 0, max.z) -- Head of the player
-    local feetPos = target:GetPos() -- Feet of the player
-
-    -- Calculate 2D screen positions
-    local screenPosTop = headPos:ToScreen()
-    local screenPosBottom = feetPos:ToScreen()
-
-    local boxHeight = (screenPosBottom.y - screenPosTop.y) * scale
-    local boxWidth = boxHeight / 2 -- Aspect ratio for box width
-
-    return screenPosTop, screenPosBottom, boxWidth, boxHeight, distance
 end
 
 
@@ -159,18 +138,59 @@ local function CalculateBox(target)
     -- Scale the box based on distance (closer = bigger)
     local scale = math.Clamp(2000 / distance, 0.5, 1.5)
     local min, max = target:OBBMins(), target:OBBMaxs()
-    local targetPos = target:GetPos()
     local headPos = target:GetPos() + Vector(0, 0, max.z) -- Head of the player
     local feetPos = target:GetPos() -- Feet of the player
 
     -- Calculate 2D screen positions
     local screenPosTop = headPos:ToScreen()
     local screenPosBottom = feetPos:ToScreen()
+
     local boxHeight = (screenPosBottom.y - screenPosTop.y) * scale
     local boxWidth = boxHeight / 2 -- Aspect ratio for box width
-    return screenPosTop, screenPosBottom, boxWidth, boxHeight, distance
 
+    return screenPosTop, screenPosBottom, boxWidth, boxHeight, distance
 end
+
+
+local function Draw2DBox(target)
+    -- Calculate the box coordinates
+    local screenPosTop, screenPosBottom, boxWidth, boxHeight, distance = CalculateBox(target)
+
+    local color = Color(255, 255, 255) -- Default to white
+
+    -- Determine the box color based on player preferences
+    if espSettings.boxColorByVisibility then
+        local isVisible = IsPlayerVisible(target)
+        color = isVisible and Color(0, 255, 0) or Color(255, 0, 0)  -- Green if visible, Red if not
+    end
+
+    if espSettings.boxColorByHealth then
+        local health = target:Health()
+        color = Color(255 * (1 - health / 100), 255 * (health / 100), 0) -- Green to Red based on health
+    end
+
+    if espSettings.boxColorBoth then
+        -- Combine health and visibility by averaging the colors
+        local health = target:Health()
+        local healthColor = Color(255 * (1 - health / 100), 255 * (health / 100), 0)
+
+        local isVisible = IsPlayerVisible(target)
+        local visibilityColor = isVisible and Color(0, 255, 0) or Color(255, 0, 0)
+
+        -- Blend colors (simple averaging)
+        color = Color(
+            math.Clamp((healthColor.r + visibilityColor.r) / 2, 0, 255),
+            math.Clamp((healthColor.g + visibilityColor.g) / 2, 0, 255),
+            math.Clamp((healthColor.b + visibilityColor.b) / 2, 0, 255)
+        )
+    end
+
+    -- Draw the box with the chosen color
+    surface.SetDrawColor(color.r, color.g, color.b, 255)
+    surface.DrawOutlinedRect(screenPosTop.x - (boxWidth / 2), screenPosTop.y, boxWidth, boxHeight)
+end
+
+
 
 -- Function to apply chams (through walls visibility)
 
@@ -287,10 +307,14 @@ hook.Add("CalcView", "AdjustFOV", function(ply, pos, angles, fov)
 
     local wep = ply:GetActiveWeapon()
 
-    -- If the player is using a scoped weapon or aiming down sights, skip the FOV adjustment
-    if IsValid(wep) and (wep:IsWeapon() and (wep:GetClass() == "weapon_sniper" or ply:KeyDown(IN_ATTACK2))) then
-        return
+    if espSettings.resetFOVOnZoom then
+
+        -- If the player is using a scoped weapon or aiming down sights, skip the FOV adjustment
+        if IsValid(wep) and (wep:IsWeapon() and (wep:GetClass() == "weapon_sniper" or ply:KeyDown(IN_ATTACK2))) then
+            return
+        end
     end
+
 
     -- Otherwise, adjust the FOV to the custom value
     return { fov = espSettings.adjustFOV }
@@ -335,18 +359,6 @@ if espSettings.bunnyHopMenu then
 end
 end)
 
---[[
-hook.Add("HUDPaint", "DrawSkeletonESP", function()
-
-    if not espSettings.skeletonEnabled then return end
-
-    for _, player in ipairs(player.GetAll()) do
-        if player ~= LocalPlayer() and player:Alive() then
-            DrawSkeleton(player)
-        end
-    end
-end)
---]]
 
 -- Hook to draw enabled settings on the screen
 hook.Add("HUDPaint", "DrawEnabledFeatures", function()
@@ -390,6 +402,12 @@ hook.Add("HUDPaint", "DrawEnabledFeatures", function()
     if espSettings.skeletonEnabled then
         table.insert(enabledFeatures, "- Skeleton Enabled")
     end
+    if espSettings.resetFOVOnZoom then 
+        table.insert(enabledFeatures, "- Reset FOV on zoom Enabled")
+    end
+    if espSettings.adjustFOVEnabled then 
+        table.insert(enabledFeatures, "- FOV Changer Enabled")
+    end
 
     -- Add more checks for other features you have
 
@@ -423,7 +441,11 @@ hook.Add("HUDPaint", "ESP_Draw2D", function()
         -- Draw skeleton if enabled
         if espSettings.skeletonEnabled then
             if target ~= LocalPlayer() and target:Alive() then
-                DrawSkeleton(target)
+
+                local isVisible = IsPlayerVisible(target)
+                local color = isVisible and Color(0, 255, 0) or Color(255, 0, 0)
+
+                DrawSkeleton(target, color)
             end
         end
 
@@ -431,8 +453,17 @@ hook.Add("HUDPaint", "ESP_Draw2D", function()
 
         -- Draw 2D Box if enabled
         if espSettings.show2DBox then
-            surface.SetDrawColor(GetHealthColor(target:Health()))
-            surface.DrawOutlinedRect(screenPosTop.x - boxWidth / 2, screenPosTop.y, boxWidth, boxHeight)
+            if target ~= LocalPlayer() and target:Alive() then     
+                
+                local Visible = IsPlayerVisible(target)
+                local color = Visible and Color(0, 255, 0) or Color(255, 0, 0)
+
+                CalculateBox(target, color)
+
+                --surface.SetDrawColor(GetHealthColor(target:Health()))
+                surface.DrawOutlinedRect(screenPosTop.x - boxWidth / 2, screenPosTop.y, boxWidth, boxHeight)
+                
+            end
         end
 
         -- Show snaplines from the bottom of the screen to the player's feet
