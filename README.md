@@ -1,3 +1,5 @@
+Keep in mind: This project was to see how much i could manipulate ChatGPT into giving me codes that would help my process in cheats / game hacking.
+
 # Garry's Mod AI Cheat
 A simple and lightweight cheat for Garry's Mod made with ChatGPT with features like ESP, Aimbot. Built to enhance gameplay while keeping it undetectable (not really).
 
